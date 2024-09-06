@@ -26,9 +26,14 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
@@ -42,7 +47,7 @@ import com.affirm.takehome.compose.RestaurantCard
 import com.affirm.takehome.network.api.ApiHelper
 import com.affirm.takehome.network.helper.ResultState
 import com.affirm.takehome.network.places.PlacesRestaurantApiFactory
-import com.affirm.takehome.network.repository.RestaurantRepository
+import com.affirm.takehome.network.repository.RestaurantRepositoryImpl
 import com.affirm.takehome.network.yelp.YelpRestaurantApiFactory
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
@@ -65,7 +70,7 @@ class MainActivity : ComponentActivity() {
 
     private val viewModel by lazy {
         MainViewModel(
-            RestaurantRepository(
+            RestaurantRepositoryImpl(
                 YelpRestaurantApiFactory.create(),
                 PlacesRestaurantApiFactory.create(),
                 ApiHelper()
@@ -87,7 +92,12 @@ class MainActivity : ComponentActivity() {
             val coroutineScope = rememberCoroutineScope()
             LaunchedEffect(pagerState) {
                 snapshotFlow { pagerState.currentPage }.collect { page ->
-                    //TODO: Load more restaurants
+                    val totalPages = viewModel.getSize()
+                    val thresholdPage = (totalPages - 5)
+                    // Check if the current page exceeds the threshold
+                    if (page >= thresholdPage) {
+                        viewModel.fetchNextPage()
+                    }
                 }
             }
             MainScreen(viewModel, pagerState, coroutineScope)
@@ -102,34 +112,52 @@ class MainActivity : ComponentActivity() {
         pagerState: PagerState,
         coroutineScope: CoroutineScope
     ) {
-        Surface {
-            Column(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                HorizontalPager(
-                    state = pagerState,
-                    userScrollEnabled = false,
-                    contentPadding = PaddingValues(8.dp),
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .weight(1f)
-                ) { page ->
-                    val restaurant = viewModel.getRestaurant(page)
-                    RestaurantCard(name = restaurant.name, image = restaurant.image)
+        val snackbarHostState = remember { SnackbarHostState() }
+
+        Scaffold(
+            snackbarHost = { SnackbarHost(snackbarHostState) },
+            content = { padding ->
+                Surface {
+                    Column(
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        HorizontalPager(
+                            state = pagerState,
+                            userScrollEnabled = false,
+                            contentPadding = PaddingValues(8.dp),
+                            modifier = Modifier
+                                .padding(16.dp)
+                                .weight(1f)
+                        ) { page ->
+                            val restaurant = viewModel.getRestaurant(page)
+                            RestaurantCard(name = restaurant.name, image = restaurant.image)
+                        }
+
+                        BottomActionBar(
+                            viewModel = viewModel,
+                            pagerState = pagerState,
+                            coroutineScope = coroutineScope
+                        )
+
+                    }
+
+                    if (viewModel.isLoading()) {
+                        LoadingIndicator()
+                    }
+
+                    LaunchedEffect(viewModel.getError()) {
+                        viewModel.getError()?.let { message ->
+                            coroutineScope.launch {
+                                snackbarHostState.showSnackbar(
+                                    message = message,
+                                    duration = SnackbarDuration.Short
+                                )
+                            }
+                        }
+                    }
                 }
-
-                BottomActionBar(
-                    viewModel = viewModel,
-                    pagerState = pagerState,
-                    coroutineScope = coroutineScope
-                )
-
             }
-
-            if (viewModel.isLoading()) {
-                LoadingIndicator()
-            }
-        }
+        )
     }
 
 

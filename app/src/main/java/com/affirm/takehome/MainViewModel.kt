@@ -8,19 +8,23 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.affirm.takehome.data.Restaurant
 import com.affirm.takehome.network.helper.ResultState
-import com.affirm.takehome.network.repository.RestaurantRepository
+import com.affirm.takehome.network.repository.RestaurantRepositoryImpl
 import kotlinx.coroutines.launch
 
 //TODO: fetch restaurants based on location
 class MainViewModel(
-    private val restaurantRepository: RestaurantRepository
+    private val restaurantRepository: RestaurantRepositoryImpl
 ) : ViewModel() {
+
+    private var currentLocation: Location? = null
 
     private var state by mutableStateOf(RestaurantUIState())
 
     fun getRestaurant(index: Int): Restaurant = state.restaurants[index]
 
     fun isLoading(): Boolean = state.isLoading
+
+    fun getError(): String? = state.errorMessage
 
     fun getSize(): Int = state.restaurants.size
 
@@ -33,13 +37,22 @@ class MainViewModel(
         currentSet.addAll(data)
         this.state = state.copy(
             restaurants = currentSet,
-            isLoading = false
+            isLoading = false,
+            errorMessage = null
         )
     }
 
     fun setLoading(isLoading: Boolean) {
         this.state = state.copy(
-            isLoading = isLoading
+            isLoading = isLoading,
+            errorMessage = null
+        )
+    }
+
+    fun setErrorMessage(error: String?) {
+        this.state = state.copy(
+            isLoading = false,
+            errorMessage = error
         )
     }
 
@@ -57,23 +70,28 @@ class MainViewModel(
 
     fun setLocation(locationResult: ResultState<Location>) {
         when (locationResult) {
-            is ResultState.Failure -> TODO()
+            is ResultState.Failure -> {
+                setErrorMessage(locationResult.error.message)
+            }
             ResultState.Loading -> {
                 setLoading(true)
             }
 
             is ResultState.Success -> {
+                currentLocation = locationResult.data
                 fetchRestaurants(locationResult.data)
             }
         }
     }
 
-    private fun fetchRestaurants(location: Location) {
+    fun fetchRestaurants(location: Location) {
         viewModelScope.launch {
             restaurantRepository.fetchRestaurants(location.latitude, location.longitude)
                 .collect { result ->
                     when (result) {
-                        is ResultState.Failure -> TODO()
+                        is ResultState.Failure -> {
+                            setErrorMessage(result.error.message)
+                        }
                         ResultState.Loading -> {
                             setLoading(true)
                         }
@@ -86,11 +104,16 @@ class MainViewModel(
         }
     }
 
+    fun fetchNextPage() {
+        currentLocation?.let { fetchRestaurants(it) }
+    }
+
 }
 
 data class RestaurantUIState(
     val restaurants: List<Restaurant> = emptyList(),
     val isLoading: Boolean = false,
+    val errorMessage: String? = null,
     val likes: Int = 0,
     val dislikes: Int = 0
 )
