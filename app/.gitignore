@@ -1,0 +1,22 @@
+# android
+local.properties
+
+# android studio
+.idea
+captures/
+*.iml
+
+# Allow shared Gradle run configurations
+!.idea/runConfigurations/
+
+# Ignore local Gradle run configurations
+**.run.xml
+
+# gradle
+.gradle
+/build
+*/build/
+**/build/
+
+# mac
+.DS_Store
