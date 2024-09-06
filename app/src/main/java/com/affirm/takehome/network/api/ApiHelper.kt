@@ -1,7 +1,7 @@
 package com.affirm.takehome.network.api
 
 class ApiHelper {
-    private var currentApiType = ApiType.Yelp // Store the current type
+    private var currentApiType = ApiType.Places // Store the current type
 
     var yelpPage: Int = 0
         private set // Only allow updating internally
