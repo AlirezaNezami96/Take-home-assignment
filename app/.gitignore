@@ -1,22 +1,33 @@
-# android
+# Gradle files
+.gradle/
+build/
+
+# Local configuration file (sdk path, etc)
 local.properties
 
-# android studio
-.idea
+# Log/OS Files
+*.log
+
+# Android Studio generated files and folders
 captures/
+.externalNativeBuild/
+.cxx/
+*.apk
+output.json
+
+# IntelliJ
 *.iml
+.idea/
+misc.xml
+deploymentTargetDropDown.xml
+render.experimental.xml
 
-# Allow shared Gradle run configurations
-!.idea/runConfigurations/
+# Keystore files
+*.jks
+*.keystore
 
-# Ignore local Gradle run configurations
-**.run.xml
+# Google Services (e.g. APIs or Firebase)
+google-services.json
 
-# gradle
-.gradle
-/build
-*/build/
-**/build/
-
-# mac
-.DS_Store
+# Android Profiling
+*.hprof
