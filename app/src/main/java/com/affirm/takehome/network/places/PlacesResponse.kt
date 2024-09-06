@@ -20,7 +20,9 @@ fun PlacesResponse.toDomainModel(): List<Restaurant> {
         Restaurant(
             id = it.id,
             name = it.name,
-            image = it.photos.firstOrNull().toString(),
+            image = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${
+                it.photos.firstOrNull()?.photoReference
+            }&key=AIzaSyAcsY9zVrBham7BwJQzRNmtKfOkgtDPZsQ",
             rating = it.rating
         )
     }
