@@ -6,7 +6,6 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 
 private const val PLACES_API_BASE_URL = "https://maps.googleapis.com/maps/api/place/"
 
@@ -27,7 +26,6 @@ class PlacesRestaurantApiFactory {
       }.asConverterFactory(contentType)
 
       val retrofit = Retrofit.Builder()
-        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .addConverterFactory(factory)
         .baseUrl(PLACES_API_BASE_URL)
         .client(httpClient.build())
