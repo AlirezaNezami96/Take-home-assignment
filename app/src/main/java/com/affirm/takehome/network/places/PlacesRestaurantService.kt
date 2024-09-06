@@ -1,6 +1,5 @@
 package com.affirm.takehome.network.places
 
-import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -8,13 +7,13 @@ import retrofit2.http.Query
 interface PlacesRestaurantService {
 
   @GET("nearbysearch/json")
-  fun getPlacesRestaurants(
+  suspend fun getPlacesRestaurants(
     @Query("location") location: String,
     @Query("pagetoken") pageToken: String,
     @Query("key") key: String = KEY,
     @Query("rankby") rankBy: String = "distance",
     @Query("type") type: String = "restaurant"
-  ): Call<PlacesResponse>
+  ): PlacesResponse
 
   companion object {
     internal const val KEY = "AIzaSyAcsY9zVrBham7BwJQzRNmtKfOkgtDPZsQ"
