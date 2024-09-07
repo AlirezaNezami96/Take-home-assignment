@@ -1,6 +1,8 @@
 package com.affirm.takehome.network.yelp
 
-class YelpRestaurantApi(private val yelpRestaurantService: YelpRestaurantService) {
+import javax.inject.Inject
+
+class YelpRestaurantApi @Inject constructor(private val yelpRestaurantService: YelpRestaurantService) {
 
     /**
      * Fetches restaurants near a given latitude and longitude. Returns 20 results at a time.

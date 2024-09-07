@@ -10,10 +10,11 @@ import com.affirm.takehome.network.yelp.YelpRestaurantApi
 import com.affirm.takehome.network.yelp.toDomainModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
 
 const val MAX_OFFSET = 20
 
-class RestaurantRepositoryImpl(
+class RestaurantRepositoryImpl @Inject constructor(
     private val yelpApi: YelpRestaurantApi,
     private val placesApi: PlacesRestaurantApi,
     private val apiHelper: ApiHelper

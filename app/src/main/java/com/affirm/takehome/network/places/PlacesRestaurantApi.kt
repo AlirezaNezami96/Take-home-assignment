@@ -1,6 +1,8 @@
 package com.affirm.takehome.network.places
 
-class PlacesRestaurantApi(private val placesRestaurantService: PlacesRestaurantService) {
+import javax.inject.Inject
+
+class PlacesRestaurantApi @Inject constructor(private val placesRestaurantService: PlacesRestaurantService) {
 
     /**
      * Fetches restaurants near a given latitude and longitude. Returns up to 20 results.

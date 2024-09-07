@@ -8,12 +8,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.affirm.takehome.data.Restaurant
 import com.affirm.takehome.network.helper.ResultState
-import com.affirm.takehome.network.repository.RestaurantRepositoryImpl
+import com.affirm.takehome.network.repository.RestaurantRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 //TODO: fetch restaurants based on location
-class MainViewModel(
-    private val restaurantRepository: RestaurantRepositoryImpl
+@HiltViewModel
+class MainViewModel @Inject constructor(
+    private val restaurantRepository: RestaurantRepository
 ) : ViewModel() {
 
     private var currentLocation: Location? = null
