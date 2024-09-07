@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.affirm.takehome.data.Restaurant
 import com.affirm.takehome.network.helper.ResultState
-import com.affirm.takehome.network.repository.RestaurantRepository
+import com.affirm.takehome.network.useCase.FetchRestaurantUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -16,7 +16,7 @@ import javax.inject.Inject
 //TODO: fetch restaurants based on location
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val restaurantRepository: RestaurantRepository
+    private val fetchRestaurantUseCase: FetchRestaurantUseCase
 ) : ViewModel() {
 
     private var currentLocation: Location? = null
@@ -45,7 +45,7 @@ class MainViewModel @Inject constructor(
         )
     }
 
-    fun setLoading(isLoading: Boolean) {
+    private fun setLoading(isLoading: Boolean) {
         this.state = state.copy(
             isLoading = isLoading,
             errorMessage = null
@@ -76,6 +76,7 @@ class MainViewModel @Inject constructor(
             is ResultState.Failure -> {
                 setErrorMessage(locationResult.error.message)
             }
+
             ResultState.Loading -> {
                 setLoading(true)
             }
@@ -87,14 +88,15 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun fetchRestaurants(location: Location) {
+    private fun fetchRestaurants(location: Location) {
         viewModelScope.launch {
-            restaurantRepository.fetchRestaurants(location.latitude, location.longitude)
+            fetchRestaurantUseCase(location.latitude, location.longitude)
                 .collect { result ->
                     when (result) {
                         is ResultState.Failure -> {
                             setErrorMessage(result.error.message)
                         }
+
                         ResultState.Loading -> {
                             setLoading(true)
                         }
