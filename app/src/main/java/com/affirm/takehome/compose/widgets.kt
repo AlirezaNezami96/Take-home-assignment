@@ -28,71 +28,71 @@ import coil.request.ImageRequest.Builder
 
 @Composable
 fun IconTextButton(
-  iconRes: Int,
-  onClick: () -> Unit,
-  modifier: Modifier,
-  counter: Int = 0
+    iconRes: Int,
+    onClick: () -> Unit,
+    modifier: Modifier,
+    counter: Int = 0
 ) {
-  Button(
-    modifier = modifier,
-    onClick = { onClick() }) {
-    Row {
-      if (counter != 0) {
-        Text(
-          fontSize = 20.sp,
-          modifier = Modifier.padding(end = 8.dp),
-          color = Color.White,
-          text = counter.toString()
-        )
-      }
-      Image(
-        modifier = Modifier.weight(1f),
-        painter = painterResource(id = iconRes),
-        colorFilter = ColorFilter.tint(Color.White),
-        contentDescription = "content"
-      )
+    Button(
+        modifier = modifier,
+        onClick = { onClick() }) {
+        Row {
+            if (counter != 0) {
+                Text(
+                    fontSize = 20.sp,
+                    modifier = Modifier.padding(end = 8.dp),
+                    color = Color.White,
+                    text = counter.toString()
+                )
+            }
+            Image(
+                modifier = Modifier.weight(1f),
+                painter = painterResource(id = iconRes),
+                colorFilter = ColorFilter.tint(Color.White),
+                contentDescription = "content"
+            )
 
+        }
     }
-  }
 }
 
 @Composable
 fun RestaurantCard(
-  name: String,
-  image: String
+    name: String,
+    image: String
 ) {
-  Card(
-    shape = RoundedCornerShape(8),
-    modifier = Modifier
-      .padding(4.dp)
-      .fillMaxWidth()
-      .height(300.dp)
-  ) {
-    Surface {
-      AsyncImage(
+    Card(
+        shape = RoundedCornerShape(8),
         modifier = Modifier
-          .align(Alignment.CenterHorizontally)
-          .fillMaxWidth(),
-        model = Builder(LocalContext.current)
-          .data(image)
-          .build(),
-        contentScale = ContentScale.Crop,
-        contentDescription = "description"
-      )
-      Box(
-        modifier = Modifier
-          .fillMaxSize()
-          .padding(8.dp),
-        Alignment.BottomEnd
-      ) {
-        Text(
-          text = name,
-          fontSize = 20.sp,
-          fontWeight = FontWeight.Bold,
-          color = Color.White,
-        )
-      }
+            .padding(4.dp)
+            .fillMaxWidth()
+            .height(300.dp)
+    ) {
+        Surface {
+            AsyncImage(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .fillMaxWidth(),
+                model = Builder(LocalContext.current)
+                    .data(image)
+                    .build(),
+                contentScale = ContentScale.Crop,
+                contentDescription = "description"
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(8.dp),
+                Alignment.BottomEnd
+            ) {
+                Text(
+                    text = name,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                )
+            }
+        }
     }
-  }
 }
 
