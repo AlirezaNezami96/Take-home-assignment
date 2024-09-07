@@ -17,11 +17,11 @@ This project is a **Restaurant Finder App** that fetches restaurant data from bo
    Kotlin Coroutines were chosen over RxJava due to **Simplicity, Integration with Jetpack components, Performance** (Coroutines have a lighter runtime overhead) and **Flow API**
 
 ### 2. Separation of Concerns
-   The project implements **MVVM architecture**, ensuring that **ViewModel** only handles business logic and interacts with the repository.
-   The **repository** manages data sources (Yelp API, Places API) and business rules, decoupling logic from the ViewModel.
-   Android-related logic (e.g., **location services**) is kept within the MainActivity and not the ViewModel, maintaining separation between platform-specific code and business logic.
+   - The project implements **MVVM architecture**, ensuring that **ViewModel** only handles business logic and interacts with the repository.
+   - The **repository** manages data sources (Yelp API, Places API) and business rules, decoupling logic from the ViewModel.
+   - Android-related logic (e.g., **location services**) is kept within the MainActivity and not the ViewModel, maintaining separation between platform-specific code and business logic.
 
-### 3.Unified Domain Model
+### 3. Unified Domain Model
    Both Google Places API and Yelp API responses are transformed into a common domain model using the `toDomainModel()` function. This keeps the business logic independent of the API used and ensures a consistent data format across the app.
 
 ### 4. Testability
