@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest.Builder
+import com.affirm.takehome.R
 
 @Composable
 fun IconTextButton(
@@ -73,6 +74,7 @@ fun RestaurantCard(
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .fillMaxWidth(),
+                placeholder = painterResource(R.drawable.img_placeholder),
                 model = Builder(LocalContext.current)
                     .data(image)
                     .build(),
