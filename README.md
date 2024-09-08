@@ -1,4 +1,8 @@
 # Restaurant Finder App
+## Spent Time
+- For the main features and logics including managing the alternating HTTP requests and show the data, I spent **95 Minutes**
+- For the code enhancements and improvements including replacing **RxJava** with **Kotlin coroutines**, adding **Dagger/Hilt** as Dependency Injection library and separation of concerns I spent **6 hours**
+
 ## Overview
 This project is a **Restaurant Finder App** that fetches restaurant data from both Google Places API and Yelp API, using Kotlin coroutines for asynchronous operations, alongside modern Android architecture patterns such as **MVVM, Jetpack Compose, and Dagger/Hilt** for dependency injection.
 
